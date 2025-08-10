@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""
+data_scrape.py
+Scrape model ids from huggingface.co with strict filtering.
+Falls back to the Hub API if scraping returns nothing.
+"""
+
+import argparse
+import re
+import time
+from pathlib import Path
+import os
+
+import requests
+from bs4 import BeautifulSoup
+
+# ---- version/banner ---------------------------------------------------------
+VERSION = "v6 arm64_strict_regex_newline_outflag"
+print(f"SCRAPER_VERSION {VERSION}")
+print(f"EXECUTING_FILE {__file__}")
+print(f"CWD {os.getcwd()}")
+
+# Optional fallback to the official client
+try:
+    from huggingface_hub import HfApi
+    HAS_HF = True
+except Exception:
+    HAS_HF = False
+
+LIST_URL = "https://huggingface.co/models?sort=likes"
+UA = (
+    "Mozilla/5.0 (Macintosh; arm64 Mac OS X 14_5) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125 Safari/537.36"
+)
+
+# Only allow hrefs shaped like /org/name (letters/digits/_/./-; first char alnum)
+MODEL_HREF_RE = re.compile(r"^/([A-Za-z0-9][A-Za-z0-9_.-]*)/([A-Za-z0-9][A-Za-z0-9_.-]*)$")
+
+# Ban top-level sections
+BAD_ORGS = {
+    "models","datasets","spaces","docs","search","organizations","settings",
+    "pricing","login","join","new","collections","tasks","events","api",
+    "blog","about","terms","privacy","contact","people"
+}
+
+def scrape_models(limit: int, debug: bool) -> list[str]:
+    s = requests.Session()
+    headers = {
+        "User-Agent": UA,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+    }
+
+    resp = None
+    for attempt in range(3):
+        try:
+            resp = s.get(LIST_URL, headers=headers, timeout=20)
+            if resp.status_code == 200:
+                break
+        except requests.RequestException:
+            pass
+        time.sleep(2 * (attempt + 1))
+
+    if not resp or resp.status_code != 200:
+        if debug:
+            print(f"HTTP status {getattr(resp, 'status_code', 'none')}")
+        return []
+
+    if debug:
+        print(f"downloaded {len(resp.text)} bytes")
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    ids: list[str] = []
+    for a in soup.select("a[href]"):
+        href = a.get("href", "")
+        href = href.split("?", 1)[0].split("#", 1)[0]   # drop query/fragment
+        m = MODEL_HREF_RE.match(href)
+        if not m:
+            continue
+        org, name = m.group(1), m.group(2)
+        if org in BAD_ORGS:
+            continue
+        # extra safety
+        if "%" in org or "%" in name or "@" in org or "@" in name:
+            continue
+        ids.append(f"{org}/{name}")
+
+    # unique, keep order, and final safety filter
+    seen, uniq = set(), []
+    for mid in ids:
+        if mid not in seen and not mid.startswith("search/") and "%" not in mid:
+            seen.add(mid)
+            uniq.append(mid)
+
+    if debug:
+        print(f"found {len(uniq)} candidates")
+
+    return uniq[:limit]
+
+def via_api(limit: int, debug: bool) -> list[str]:
+    if not HAS_HF:
+        if debug:
+            print("huggingface_hub not installed")
+        return []
+    api = HfApi()
+    models = api.list_models(sort="likes", direction=-1, limit=limit)
+    return [m.modelId for m in models]
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--limit", type=int, default=20)
+    p.add_argument("--debug", action="store_true")
+    p.add_argument("--no-fallback", action="store_true")
+    p.add_argument("--out", type=Path, default=None, help="output path for scraped_models.txt")
+    args = p.parse_args()
+
+    ids = scrape_models(limit=args.limit, debug=args.debug)
+    if not ids and not args.no_fallback:
+        if args.debug:
+            print("scrape returned zero, falling back to API")
+        ids = via_api(limit=args.limit, debug=args.debug)
+
+    if not ids:
+        print("No model ids found")
+        return
+
+    # choose output path: explicit --out, else script directory
+    out_path = args.out
+    if out_path is None:
+        out_path = Path(__file__).resolve().parent / "scraped_models.txt"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # ensure trailing newline so shell prompt doesn't attach
+    out_path.write_text("\n".join(ids) + "\n", encoding="utf-8")
+
+    print("First results:")
+    for m in ids[:5]:
+        print(" ", m)
+    print(f"Saved {len(ids)} ids to {out_path.resolve()}")
+
+if __name__ == "__main__":
+    main()
+
+

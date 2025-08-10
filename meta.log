@@ -1,0 +1,18 @@
+                                   model_id  ...  created_at
+0                   deepseek-ai/DeepSeek-R1  ...  2025-01-20
+1              black-forest-labs/FLUX.1-dev  ...  2024-07-31
+2             CompVis/stable-diffusion-v1-4  ...  2022-08-20
+3  stabilityai/stable-diffusion-xl-base-1.0  ...  2023-07-25
+4                meta-llama/Meta-Llama-3-8B  ...  2024-04-17
+
+[5 rows x 5 columns]
+[2025-08-01T17:35:35] start
+                                   model_id  ...  created_at
+0                   deepseek-ai/DeepSeek-R1  ...  2025-01-20
+1              black-forest-labs/FLUX.1-dev  ...  2024-07-31
+2             CompVis/stable-diffusion-v1-4  ...  2022-08-20
+3  stabilityai/stable-diffusion-xl-base-1.0  ...  2023-07-25
+4                meta-llama/Meta-Llama-3-8B  ...  2024-04-17
+
+[5 rows x 5 columns]
+wrote featured_models.csv

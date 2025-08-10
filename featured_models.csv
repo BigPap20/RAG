@@ -1,0 +1,6 @@
+model_id,likes,downloads,license,created_at
+deepseek-ai/DeepSeek-R1,12544,989834,mit,1/20/25
+black-forest-labs/FLUX.1-dev,11052,1554840,other,7/31/24
+CompVis/stable-diffusion-v1-4,6882,982318,creativeml-openrail-m,8/20/22
+stabilityai/stable-diffusion-xl-base-1.0,6782,2474892,openrail++,7/25/23
+meta-llama/Meta-Llama-3-8B,6265,392745,llama3,4/17/24
