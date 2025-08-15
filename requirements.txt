@@ -1,0 +1,6 @@
+streamlit==1.47.1
+pandas
+huggingface-hub
+requests
+beautifulsoup4
+openpyxl
