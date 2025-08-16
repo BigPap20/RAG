@@ -1,3 +1,18 @@
 .streamlit/
 secrets.toml
 *.env
+
+# Ignore Visual Studio caches
+.vs/
+*.user
+*.suo
+*.vscode/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local data files
+scraped_models.txt
