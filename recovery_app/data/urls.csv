@@ -1,0 +1,5 @@
+id,created_at,source,author_alias,text,text_url,image_url,tags,consent_flag,notes
+,,web,anon-001,"We sat in a circle and shared our stories of hope.","https://en.wikipedia.org/wiki/Mutual_aid_(organization_theory)","https://upload.wikimedia.org/wikipedia/commons/2/21/Group_discussion.jpg","group;support",True,"Commons image"
+,,web,anon-002,"Calm breath steady mind.","https://en.wikipedia.org/wiki/Meditation","https://upload.wikimedia.org/wikipedia/commons/9/9a/Meditation_%2811815704426%29.jpg","meditation;mindfulness",True,"Public domain on Commons"
+,,web,anon-003,"From ashes a new life grows.",https://en.wikipedia.org/wiki/Ecological_succession,"https://upload.wikimedia.org/wikipedia/commons/5/57/Post-bushfire_recovery_in_Australia_%2849565262941%29.jpg","renewal;nature",True,"US DOI public domain"
+,,web,anon-004,"They brought home what they worked to recover.",https://en.wikipedia.org/wiki/Apollo_11,"https://upload.wikimedia.org/wikipedia/commons/6/6b/Apollo_11_Practice_recovery.jpg","rescue;history",True,"NASA / US Navy public domain"

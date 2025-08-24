@@ -1,0 +1,11 @@
+streamlit==1.47.1
+pandas
+requests
+beautifulsoup4
+openpyxl
+pyarrow
+pillow
+watchdog
+fastapi
+uvicorn
+
