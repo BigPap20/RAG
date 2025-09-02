@@ -41,7 +41,6 @@ packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_
 pandas==2.3.1
 pillow==11.3.0
 platformdirs @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_platformdirs_1746710438/work
-pluggy @ file:///home/conda/feedstock_root/build_artifacts/pluggy_1747339660894/work
 protobuf==6.31.1
 pyarrow==21.0.0
 pycosat @ file:///Users/runner/miniforge3/conda-bld/pycosat_1732588445684/work
