@@ -7,7 +7,7 @@ import streamlit as st
 # ---------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------
-DATA_FILE = "scraped_models.txt"   # Local cache file
+DATA_FILE = "../scraped_models.txt"   # Local cache file
 DEFAULT_IDS = ["gpt2", "bert-base-uncased", "distilbert-base-uncased"]
 SCRAPE_INTERVAL = 60  # seconds between refreshes
 
